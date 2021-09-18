@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FEC7FCFE-BF0E-43E2-8CB8-96D545D2C247}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>CentralAlarmes</RootNamespace>
-    <AssemblyName>CentralAlarmes</AssemblyName>
+    <RootNamespace>PanelManagement</RootNamespace>
+    <AssemblyName>PanelMonitor</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

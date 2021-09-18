@@ -29,9 +29,9 @@ namespace PanelManagement
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.GrpCentrals = new System.Windows.Forms.GroupBox();
             this.DgvCentrals = new System.Windows.Forms.DataGridView();
             this.DgvCentralsColCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,7 +45,6 @@ namespace PanelManagement
             this.DgvEventsColPart = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DgvEventsColZone = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DgvEventsColUser = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button1 = new System.Windows.Forms.Button();
             this.GrpCentrals.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCentrals)).BeginInit();
             this.GrpEvents.SuspendLayout();
@@ -66,36 +65,36 @@ namespace PanelManagement
             // 
             this.DgvCentrals.AllowUserToAddRows = false;
             this.DgvCentrals.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvCentrals.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvCentrals.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.DgvCentrals.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvCentrals.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.DgvCentralsColCode});
             this.DgvCentrals.Location = new System.Drawing.Point(12, 18);
             this.DgvCentrals.Name = "DgvCentrals";
             this.DgvCentrals.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvCentrals.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvCentrals.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.DgvCentrals.RowHeadersVisible = false;
             this.DgvCentrals.Size = new System.Drawing.Size(78, 416);
             this.DgvCentrals.TabIndex = 0;
             // 
             // DgvCentralsColCode
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DgvCentralsColCode.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DgvCentralsColCode.DefaultCellStyle = dataGridViewCellStyle8;
             this.DgvCentralsColCode.HeaderText = "Códigos";
             this.DgvCentralsColCode.Name = "DgvCentralsColCode";
             this.DgvCentralsColCode.ReadOnly = true;
@@ -116,6 +115,8 @@ namespace PanelManagement
             // 
             this.DgvEvents.AllowUserToAddRows = false;
             this.DgvEvents.AllowUserToDeleteRows = false;
+            this.DgvEvents.AllowUserToResizeColumns = false;
+            this.DgvEvents.AllowUserToResizeRows = false;
             this.DgvEvents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvEvents.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.DgvEventsColDate,
@@ -188,26 +189,15 @@ namespace PanelManagement
             this.DgvEventsColUser.ReadOnly = true;
             this.DgvEventsColUser.Width = 75;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(973, 106);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(54, 25);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
             // FrmPanelViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(974, 471);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.GrpEvents);
             this.Controls.Add(this.GrpCentrals);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1100, 510);
+            this.MaximumSize = new System.Drawing.Size(990, 510);
             this.MinimumSize = new System.Drawing.Size(990, 510);
             this.Name = "FrmPanelViewer";
             this.ShowIcon = false;
@@ -238,7 +228,6 @@ namespace PanelManagement
         private System.Windows.Forms.DataGridViewTextBoxColumn DgvEventsColPart;
         private System.Windows.Forms.DataGridViewTextBoxColumn DgvEventsColZone;
         private System.Windows.Forms.DataGridViewTextBoxColumn DgvEventsColUser;
-        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -27,6 +27,20 @@ namespace PanelManagement
             Task.Run(() => TcpConnectionManager());
         }
 
+        // Verifica se já tem um painel conectado com o código informado.
+        private bool PanelExists(string panelCode)
+        {
+            for (int i = 0; i < DgvCentrals.Rows.Count; i++)
+            {               
+                if (DgvCentrals.Rows[i].Cells[0].Value.Equals(panelCode))
+                {
+                    return true;                                               
+                }             
+            }
+
+            return false;
+        }
+
         delegate void ShowPanelConnectedCallback(AlarmPanel panelConnected);
 
         private void ShowPanelConnected(AlarmPanel panelConnected)
@@ -45,7 +59,7 @@ namespace PanelManagement
         }
 
         delegate void RemovePanelFromListCallback(string panelCode);
-
+        
         // Remove o painel específico da lista códigos.
         private void RemovePanelFromList(string panelCode)
         {
@@ -78,7 +92,7 @@ namespace PanelManagement
                 Invoke(callback, eventReceived);
             }
             else
-            {
+            {              
                 DgvEvents.Rows.Add(
                     eventReceived.Date,
                     eventReceived.CentralCode,
@@ -95,65 +109,77 @@ namespace PanelManagement
         // Função reponsável pelo controle de conexões.
         public bool TcpConnectionManager()
         {
-            bool done = false;            
-            // Configura processo que aguardará conexões na porta de rede especificada usando protocolo TCP.
-            TcpListener tcpListener = new TcpListener(IPAddress.Any, portNum);
-            tcpListener.Start();
+            bool done = false;
+            try
+            {                        
+                // Configura processo que aguardará conexões na porta de rede especificada usando protocolo TCP.
+                TcpListener tcpListener = new TcpListener(IPAddress.Any, portNum);
+                tcpListener.Start();
            
-            while (!done)
-            {                
-                try
+                while (!done)
                 {
                     // Processamento fica bloqueado aguardando conexão.
                     TcpClient tcpClient = tcpListener.AcceptTcpClient();
                     // Recupera o canal de comunicação.
                     NetworkStream networkStream = tcpClient.GetStream();
-                    
-                    byte[] buffer = new byte[maxConnBuffer];
-                    // Lê dados enviados pelo cliente.
-                    int bytesRead = networkStream.Read(buffer, 0, maxConnBuffer);
 
-                    // Se o tamanho do comando (dados) for diferente do esperado: Erro de protocolo - Fecha conexão.                  
-                    if (bytesRead == 4)
+                    try
                     {
-                        // Se o byte do cabeçalho ou rodapé for diferente de 0xff: Erro de protocolo - Fecha conexão.  
-                        if (buffer[0].ToString("x").Equals("ff") && buffer[3].ToString("x").Equals("ff"))
-                        {
-                            string cmdEventHexString = gf.ByteArrayToHexString(buffer);
-                            var connPanel = new AlarmPanel
-                            {                                
-                                Code = gf.HexStringToIntString(cmdEventHexString, 2, 4)
-                            };
+                        byte[] buffer = new byte[maxConnBuffer];
+                        // Lê dados enviados pelo cliente.
+                        int bytesRead = networkStream.Read(buffer, 0, maxConnBuffer);
 
-                            ShowPanelConnected(connPanel);
-                            // Inicia uma nova Task para cada cliente conectado, para que o mesmo possa gerenciar os eventos independentemente dos outros. 
-                            Task.Run(() => ConnectedPanelManager(networkStream, connPanel.Code));                
+                        // Se o tamanho do comando (dados) for diferente do esperado: Erro de protocolo - Fecha conexão.                  
+                        if (bytesRead == 4)
+                        {
+                            // Se o byte do cabeçalho ou rodapé for diferente de 0xff: Erro de protocolo - Fecha conexão.  
+                            if (buffer[0].ToString("x").Equals("ff") && buffer[3].ToString("x").Equals("ff"))
+                            {
+                                string cmdEventHexString = gf.ByteArrayToHexString(buffer);
+                                var connPanel = new AlarmPanel
+                                {                                
+                                    Code = gf.HexStringToIntString(cmdEventHexString, 2, 4)
+                                };
+                            
+                                if (!PanelExists(connPanel.Code))
+                                {
+                                    ShowPanelConnected(connPanel);
+                                    // Inicia uma nova Task para cada cliente conectado, para que o mesmo possa gerenciar os eventos independentemente dos outros. 
+                                    Task.Run(() => ConnectedPanelManager(networkStream, connPanel.Code));
+                                }  
+                                else
+                                {                                
+                                    throw new Exception("Panel Code Already Connected.");
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception("Invalid Header.");
+                            }
                         }
                         else
                         {
-                            // Comando finalizador. Usado somente nos clientes genéricos desse programa. 
-                            networkStream.Write(gf.StringToByteArray("ffffffff"), 0, 4);
-                            networkStream.Close();
-                            throw new Exception("Invalid Header.");
+                            throw new Exception("Invalid Command Size Received.");
                         }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        // Comando finalizador. Usado somente nos clientes genéricos desse programa. 
-                        networkStream.Write(gf.StringToByteArray("ffffffff"), 0, 4 );
-                        // Encerra conexão com o cliente.
+                        // Responde cliente.
+                        var clientResponse = gf.HexStringToByteArray("ffffffff");
+                        networkStream.Write(clientResponse, 0, clientResponse.Length);
+                        // Encerra conexão.
                         networkStream.Close();
-                        // Gera uma exceção, caso seja de interesse fazer alguma ação posterior.
-                        throw new Exception("Invalid command size received.");
+                        Console.WriteLine("Close client connection. Reason: {0}", e.Message);     
                     }
                 }
-                catch (Exception e)
-                {                    
-                    Console.WriteLine("Close client connection. Reason: {0}", e.Message);     
-                }
+
+                tcpListener.Stop();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Internal error. Reason: {0}", e.Message);
             }
 
-            tcpListener.Stop();
             return done;
         }
 
@@ -210,84 +236,12 @@ namespace PanelManagement
             {
                 Console.WriteLine("Close client connection. Reason: {0}", e.Message);
                 // Comando finalizador. Usado somente nos clientes genéricos desse programa. 
-                networkStream.Write(gf.StringToByteArray("ffffffff"), 0, 4);
+                networkStream.Write(gf.HexStringToByteArray("ffffffff"), 0, 4);
                 networkStream.Close();                
                 RemovePanelFromList(panelCode);                
             }
 
             return done;
-        }
-        
-        // Função que cria um conexão sincrona simulando um painel.
-        public bool StartClient(string connHex, string evtHex)
-        { 
-            try
-            {                
-                IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());                
-                IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, 9000);
-
-                // Cria o socket TCP/IP. 
-                Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                
-                try
-                {
-                    sender.Connect(remoteEP);
-
-                    Console.WriteLine("Socket connected to {0}", sender.RemoteEndPoint.ToString());
-         
-                    // Codifica a string Hex de conexão num array de bytes.
-                    byte[] bufferConn = gf.StringToByteArray(connHex);
-                    // Envia comando de conexão.
-                    int bytesSentConn = sender.Send(bufferConn);
-                                      
-                    // Envia alguns eventos fixos.
-                    byte[] buffereEvt;                    
-                    for (int i = 1; i < 3; i++)
-                    {
-                        Task.Delay(3000 * i).Wait();
-                        // Codifica a string Hex do evento num array de bytes.
-                        buffereEvt = gf.StringToByteArray(evtHex);
-                        sender.Send(buffereEvt);
-                    }
-                    Task.Delay(2000).Wait();
-
-                    // Recupera a resposta do servidor.                      
-                    // byte[] bytes = new byte[4];
-                    // int bytesRec = sender.Receive(bytes);
-                    // Console.WriteLine("Received Hex Bytes: " + gf.ByteArrayToHexString(bytes));
-
-                    // Libera o socket. 
-                    //sender.Shutdown(SocketShutdown.Both);
-                    sender.Shutdown(SocketShutdown.Send);
-                    sender.Close();
-
-                    return true;
-                }
-                catch (ArgumentNullException ane)
-                {
-                    throw new Exception(ane.Message);                   
-                }
-                catch (SocketException se)
-                {
-                    throw new Exception(se.Message);                 
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.Message);                    
-                }
-            }
-            catch (Exception e)
-            {                
-                Console.WriteLine("Internal client message error: {0}.", e.Message);
-            }
-
-            return false;
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            Task.Run(() => StartClient("ff0004ff", "ff0535053501020379"));
         }
     }
 }

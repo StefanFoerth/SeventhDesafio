@@ -8,7 +8,8 @@ namespace PanelManagement
 {
     public class GeneralFunctions
     {
-        public byte[] StringToByteArray(string hex)
+        // Transforma uma string hexadecimal num array de bytes.
+        public byte[] HexStringToByteArray(string hex)
         {
             return Enumerable.Range(0, hex.Length)
                              .Where(x => x % 2 == 0)
@@ -16,7 +17,7 @@ namespace PanelManagement
                              .ToArray();
         }
 
-        // Transforma um array de bytes em hexadecimal numa string.
+        // Transforma um array de bytes numa string hexadecimal.
         public string ByteArrayToHexString(byte[] byteArray)
         {
             StringBuilder hexValue = new StringBuilder(byteArray.Length * 2);
@@ -40,15 +41,16 @@ namespace PanelManagement
             return sumBytes;
         }
 
+        // Converte uma string hexadecimal em inteiro.
         public string HexStringToIntString(string hexString, int startIndex, int offSet)
         {
             return int.Parse(hexString.Substring(startIndex, offSet), NumberStyles.HexNumber).ToString();
         }
 
-        // Recupera as descrições dos erros.
-        // Foi utilizado um arquivo texto como recurso da aplicação.
+        // Recupera as descrições dos erros.        
         public string GetErrorCodeDescription(string errorCode)
         {
+            // Foi utilizado um arquivo texto como recurso da aplicação.
             StringReader strReader = new StringReader(Properties.Resources.ErrorCodes);
             while (true)
             {
