@@ -288,7 +288,6 @@ namespace PanelManagement
         private void button1_Click_1(object sender, EventArgs e)
         {
             Task.Run(() => StartClient("ff0004ff", "ff0535053501020379"));
-
         }
     }
 }
