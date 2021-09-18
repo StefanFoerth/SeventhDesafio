@@ -1,0 +1,29 @@
+1100|Emergência médica
+1110|Incêndio
+1121|Emergência silenciosa
+1130|Disparo de zona
+1142|Curto circuito na zona
+1143|Falha de módulo expansor
+1144|Violação de tamper
+1300|Falha de fonte auxiliar
+1301|Falha de energia elétrica
+1302|Falha de bateria
+1321|Falha de sirene
+1333|Falha de tensão no barramento
+1350|Falha de comunicação
+1401|Alarme desarmado
+1402|Partição desarmada
+1570|Zona inibida
+3130|Restauro de zona
+3142|Restauro curto circuito
+3143|Restauro módulo expansor
+3144|Restauro de tamper
+3300|Restauro fonte auxiliar
+3301|Restauro energia elétrica
+3302|Restauro de bateria
+3321|Restauro de sirene
+3333|Restauro tensão no barramento
+3401|Alarme armado
+3402|Partição armada
+3403|Alarme auto armado
+3456|Alarme armado forçado
