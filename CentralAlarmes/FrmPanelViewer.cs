@@ -13,8 +13,8 @@ namespace PanelManagement
         private const int maxConnBuffer = 4;
         // Tamanho máximo do buffer de dados.
         private const int maxEvtBuffer = 9;
-        // Funções gerais
-        private GeneralFunctions gf = new GeneralFunctions();
+        // Funções gerais.
+        private GeneralFunctions _gFuncs = new GeneralFunctions();
 
         public FrmPanelViewer()
         {
@@ -98,7 +98,7 @@ namespace PanelManagement
                     eventReceived.CentralCode,
                     eventReceived.AccountCode,
                     eventReceived.Code,
-                    gf.GetErrorCodeDescription(eventReceived.Code),        
+                    _gFuncs.GetErrorCodeDescription(eventReceived.Code),        
                     eventReceived.PartitionCode,
                     eventReceived.ZoneCode,
                     eventReceived.UserCode                  
@@ -135,10 +135,10 @@ namespace PanelManagement
                             // Se o byte do cabeçalho ou rodapé for diferente de 0xff: Erro de protocolo - Fecha conexão.  
                             if (buffer[0].ToString("x").Equals("ff") && buffer[3].ToString("x").Equals("ff"))
                             {
-                                string cmdEventHexString = gf.ByteArrayToHexString(buffer);
+                                string cmdEventHexString = _gFuncs.ByteArrayToHexString(buffer);
                                 var connPanel = new AlarmPanel
                                 {                                
-                                    Code = gf.HexStringToIntString(cmdEventHexString, 2, 4)
+                                    Code = _gFuncs.HexStringToIntString(cmdEventHexString, 2, 4)
                                 };
                             
                                 if (!PanelExists(connPanel.Code))
@@ -165,7 +165,7 @@ namespace PanelManagement
                     catch (Exception e)
                     {
                         // Responde cliente.
-                        var clientResponse = gf.HexStringToByteArray("ffffffff");
+                        var clientResponse = _gFuncs.HexStringToByteArray("ffffffff");
                         networkStream.Write(clientResponse, 0, clientResponse.Length);
                         // Encerra conexão.
                         networkStream.Close();
@@ -200,18 +200,18 @@ namespace PanelManagement
                         if (buffer[0].ToString("x").Equals("ff"))
                         {
                             // Se a soma dos bytes que antecedem o checksum for diferente do valor do checksum: Ignora evento.                            
-                            if ((gf.SumBytesOfArray(buffer, 0, 8) - buffer[8]) == 0)
+                            if ((_gFuncs.SumBytesOfArray(buffer, 0, 8) - buffer[8]) == 0)
                             {
-                                string cmdEventHexString = gf.ByteArrayToHexString(buffer);   
+                                string cmdEventHexString = _gFuncs.ByteArrayToHexString(buffer);   
                                 var centralEvent = new PanelEvent
                                 {
                                     Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
                                     CentralCode = panelCode.ToString(),
-                                    AccountCode = gf.HexStringToIntString(cmdEventHexString, 2, 4),
-                                    Code = gf.HexStringToIntString(cmdEventHexString, 6, 4),
-                                    PartitionCode = gf.HexStringToIntString(cmdEventHexString, 10, 2),
-                                    ZoneCode = gf.HexStringToIntString(cmdEventHexString, 12, 2),
-                                    UserCode = gf.HexStringToIntString(cmdEventHexString, 14, 2)
+                                    AccountCode = _gFuncs.HexStringToIntString(cmdEventHexString, 2, 4),
+                                    Code = _gFuncs.HexStringToIntString(cmdEventHexString, 6, 4),
+                                    PartitionCode = _gFuncs.HexStringToIntString(cmdEventHexString, 10, 2),
+                                    ZoneCode = _gFuncs.HexStringToIntString(cmdEventHexString, 12, 2),
+                                    UserCode = _gFuncs.HexStringToIntString(cmdEventHexString, 14, 2)
                                 };
 
                                 ShowEventReceived(centralEvent);
@@ -235,9 +235,12 @@ namespace PanelManagement
             catch (Exception e)
             {
                 Console.WriteLine("Close client connection. Reason: {0}", e.Message);
-                // Comando finalizador. Usado somente nos clientes genéricos desse programa. 
-                networkStream.Write(gf.HexStringToByteArray("ffffffff"), 0, 4);
-                networkStream.Close();                
+                // Responde cliente.
+                var clientResponse = _gFuncs.HexStringToByteArray("ffffffff");
+                networkStream.Write(clientResponse, 0, clientResponse.Length);
+                // Encerra conexão.
+                networkStream.Close();  
+                // Remove panel da lista.
                 RemovePanelFromList(panelCode);                
             }
 
